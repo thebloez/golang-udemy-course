@@ -15,11 +15,11 @@ func TestBuatChannel(t *testing.T) {
 		channel <- "Ryan Safary Hidayat"
 	}()
 
-	data := <- channel
+	data := <-channel
 	fmt.Println(data)
 }
 
-func swapStringToChannel(channel chan string, str string){
+func swapStringToChannel(channel chan string, str string) {
 	time.Sleep(10 * time.Millisecond)
 	channel <- str
 }
@@ -36,13 +36,11 @@ func TestChannelAsParameter(t *testing.T) {
 	fmt.Println(<-channel)
 }
 
-
 // Hanya bisa untuk men-set channel
 func onlyIn(channel chan<- string) {
 	time.Sleep(5 * time.Millisecond)
 	channel <- "Ryan Safary Hidayat"
 }
-
 
 // Hanya bisa get(mengambil) data dari channel
 func onlyOut(channel <-chan string) {
@@ -79,14 +77,13 @@ func TestBufferedChannel(t *testing.T) {
 	fmt.Println("jml data : ", len(channel))
 
 	// ambil data dari channel
-	println(<- channel)
-	println(<- channel)
-	println(<- channel)
-
+	println(<-channel)
+	println(<-channel)
+	println(<-channel)
 
 	fmt.Println("------------")
 	fmt.Println("Panjang Buffer : ", cap(channel)) // panjang buffer
-	fmt.Println("Jumlah Data : ", len(channel)) // jumlah data di buffer
+	fmt.Println("Jumlah Data : ", len(channel))    // jumlah data di buffer
 	//fmt.Println(<- channel)
 
 }
@@ -95,7 +92,7 @@ func TestRangeChannel(t *testing.T) {
 	channel := make(chan string)
 
 	go func() {
-		for i:=0; i < 10; i++ {
+		for i := 0; i < 10; i++ {
 			channel <- "Iterasi ke " + strconv.Itoa(i)
 		}
 		// channel harus di close setelah pengulangan set ke channel
@@ -107,6 +104,4 @@ func TestRangeChannel(t *testing.T) {
 	}
 }
 
-
-
-
+// test github ssh
