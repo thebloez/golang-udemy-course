@@ -19,8 +19,8 @@ func TestBuatChannel(t *testing.T) {
 	fmt.Println(data)
 }
 
-func swapStringToChannel(channel chan string, str string) {
-	time.Sleep(10 * time.Millisecond)
+func swapStringToChannel(channel chan string, str string, duration time.Duration) {
+	time.Sleep(duration)
 	channel <- str
 }
 
@@ -28,11 +28,11 @@ func TestChannelAsParameter(t *testing.T) {
 	channel := make(chan string)
 	defer close(channel)
 
-	go swapStringToChannel(channel, "Ryan")
+	go swapStringToChannel(channel, "Ryan", 5*time.Millisecond)
 	fmt.Println(<-channel)
-	go swapStringToChannel(channel, "Dewi")
+	go swapStringToChannel(channel, "Dewi", 5*time.Millisecond)
 	fmt.Println(<-channel)
-	go swapStringToChannel(channel, "Kanaya")
+	go swapStringToChannel(channel, "Kanaya", 5*time.Millisecond)
 	fmt.Println(<-channel)
 }
 
@@ -91,6 +91,7 @@ func TestBufferedChannel(t *testing.T) {
 func TestRangeChannel(t *testing.T) {
 	channel := make(chan string)
 
+	// goroutine bersifat async
 	go func() {
 		for i := 0; i < 10; i++ {
 			channel <- "Iterasi ke " + strconv.Itoa(i)
@@ -104,4 +105,30 @@ func TestRangeChannel(t *testing.T) {
 	}
 }
 
-// test github ssh
+// digunakan ketika memproses lebih dari 1 channel
+func TestSwithChannel(t *testing.T) {
+	channel1 := make(chan string)
+	channel2 := make(chan string)
+	defer close(channel1)
+	defer close(channel2)
+
+	go swapStringToChannel(channel1, "Ryan", 50)
+	go swapStringToChannel(channel2, "Dewi", 50)
+
+	i := 0
+	for {
+		select {
+		case data := <-channel1:
+			fmt.Println("data dari channel1 :", data)
+			i++
+		case data := <-channel2:
+			fmt.Println("data dari channel2 :", data)
+			i++
+		default:
+			fmt.Println("menunggu data...")
+		}
+		if i == 2 {
+			break
+		}
+	}
+}
